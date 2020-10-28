@@ -3,21 +3,21 @@ const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const path = require('path');
-const { debugPort } = require('process');
+
 const app = express();
 
-//Avoid collision with frontend
-const port = 5000;
+const indexRoutes = require('./routes/index.routes');
 
-//Db connection const
+//Avoid collision with frontend
+const port = 2000;
+
+//MYSQL db connection const
 const db = mysql.createConnection ({
     host: 'localhost',
     user: 'root',
-    password: 'password',
+    password: '',
     database: 'chad'
 });
-module.exports =  db;
-
 
 //Db connect act
 db.connect((err) => {
@@ -27,7 +27,6 @@ db.connect((err) => {
     console.log('Db connection successful');
 });
 global.db = db;
-
 
 // Middleware
 app.set('port', process.env.port || port);
@@ -39,6 +38,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
 
 //Routes
+app.use('/', indexRoutes);
+app.get('*', function(req, res, next){
+    res.status(404);
+    res.render('404.ejs', {
+        title: "404 - Not Found",
+    });
+});
 
 // Listen on port
 app.listen(port, () => {
