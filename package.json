@@ -12,11 +12,14 @@
     "license": "ISC",
     "dependencies": {
         "bcrypt": "^5.0.0",
+        "bcrypt-nodejs": "0.0.3",
         "body-parser": "^1.18.3",
+        "connect-flash": "^0.1.1",
         "ejs": "^2.6.1",
         "express": "^4.17.1",
         "express-fileupload": "^0.4.0",
         "mysql": "^2.18.1",
+        "passport": "^0.4.1",
         "req-flash": "0.0.3"
     }
 }

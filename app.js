@@ -3,8 +3,14 @@ const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const path = require('path');
-
 const app = express();
+
+const flash    = require('connect-flash');
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+const bcrypt = require('bcrypt');
+const passport = require('passport');
+
 
 const indexRoutes = require('./routes/index.routes');
 
@@ -39,14 +45,19 @@ app.use(fileUpload());
 
 //Routes
 app.use('/', indexRoutes);
-app.get('*', function(req, res, next){
-    res.status(404);
-    res.render('404.ejs', {
-        title: "404 - Not Found",
-    });
-});
+
 //Routes - /login
-app.get('login.ejs',{ message: req.flash('loginMessage') });
+app.get('/login', function(req, res) {
+    res.render('login.ejs',{ message: req.flash('loginMessage') });
+});    
+app.post('/login', passport.authenticate('local-login', {
+    successRedirect : '/', 
+    failureRedirect : '/login',
+    failureFlash : true 
+})
+);
+//cookie expiration logic here?
+
 
 // Listen on port
 app.listen(port, () => {
