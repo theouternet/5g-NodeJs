@@ -45,6 +45,8 @@ app.get('*', function(req, res, next){
         title: "404 - Not Found",
     });
 });
+//Routes - /login
+app.get('login.ejs',{ message: req.flash('loginMessage') });
 
 // Listen on port
 app.listen(port, () => {
