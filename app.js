@@ -4,15 +4,21 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const path = require('path');
 const app = express();
-
-const flash    = require('connect-flash');
-app.use(flash()); // use connect-flash for flash messages stored in session
-
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-
-
+const session = require('express-session');
 const indexRoutes = require('./routes/index.routes');
+const flash    = require('connect-flash');
+
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(session({
+    secret: 'ssshhhhh',
+    resave: true,
+    saveUninitialized: true
+ } )); // session secret
+
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 //Avoid collision with frontend
 const port = 2000;
