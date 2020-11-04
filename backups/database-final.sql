@@ -1,22 +1,24 @@
 -- phpMyAdmin SQL Dump
--- version 3.2.0.1
--- http://www.phpmyadmin.net
+-- version 5.0.4
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Jan 29, 2013 at 06:50 AM
--- Server version: 5.1.36
--- PHP Version: 5.3.0
+-- Host: database
+-- Generation Time: Nov 04, 2020 at 02:11 AM
+-- Server version: 5.7.32
+-- PHP Version: 7.4.11
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
-CREATE DATABASE chad;
+-- Database: `project_db`
 --
 
 -- --------------------------------------------------------
@@ -25,8 +27,8 @@ CREATE DATABASE chad;
 -- Table structure for table `ilance_buynow_orders`
 --
 
-CREATE TABLE IF NOT EXISTS `ilance_buynow_orders` (
-  `orderid` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `ilance_buynow_orders` (
+  `orderid` int(10) NOT NULL,
   `parentid` int(5) NOT NULL DEFAULT '0',
   `project_id` int(10) NOT NULL DEFAULT '0',
   `buyer_id` int(10) NOT NULL DEFAULT '0',
@@ -69,21 +71,29 @@ CREATE TABLE IF NOT EXISTS `ilance_buynow_orders` (
   `shiptracknumber` varchar(250) NOT NULL DEFAULT '',
   `buyerfeedback` int(1) NOT NULL DEFAULT '0',
   `sellerfeedback` int(1) NOT NULL DEFAULT '0',
-  `status` enum('paid','cancelled','pending_delivery','delivered','fraud','offline','offline_delivered') NOT NULL DEFAULT 'paid',
-  PRIMARY KEY (`orderid`),
-  KEY `parentid` (`parentid`),
-  KEY `project_id` (`project_id`),
-  KEY `buyer_id` (`buyer_id`),
-  KEY `owner_id` (`owner_id`),
-  KEY `attachid` (`attachid`),
-  KEY `invoiceid` (`invoiceid`),
-  KEY `status` (`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `status` enum('paid','cancelled','pending_delivery','delivered','fraud','offline','offline_delivered') NOT NULL DEFAULT 'paid'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `ilance_buynow_orders`
+-- Table structure for table `ilance_categories`
 --
 
+CREATE TABLE `ilance_categories` (
+  `cid` int(10) NOT NULL,
+  `category_name` varchar(250) CHARACTER SET utf8 NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ilance_categories`
+--
+
+INSERT INTO `ilance_categories` (`cid`, `category_name`) VALUES
+(1, 'Category Test 1'),
+(2, 'Category Test 2'),
+(3, 'Category Test 3'),
+(4, 'Category Test 4');
 
 -- --------------------------------------------------------
 
@@ -91,8 +101,8 @@ CREATE TABLE IF NOT EXISTS `ilance_buynow_orders` (
 -- Table structure for table `ilance_projects`
 --
 
-CREATE TABLE IF NOT EXISTS `ilance_projects` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `ilance_projects` (
+  `id` int(10) NOT NULL,
   `project_id` int(15) NOT NULL DEFAULT '0',
   `escrow_id` int(10) NOT NULL DEFAULT '0',
   `cid` int(10) NOT NULL DEFAULT '0',
@@ -158,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `ilance_projects` (
   `buynow_price` double(17,2) NOT NULL DEFAULT '0.00',
   `buynow_qty` int(10) NOT NULL DEFAULT '0',
   `buynow_qty_lot` int(1) NOT NULL DEFAULT '0',
-  `items_in_lot` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `items_in_lot` mediumint(8) UNSIGNED NOT NULL DEFAULT '0',
   `buynow_purchases` int(10) NOT NULL DEFAULT '0',
   `reserve` int(1) NOT NULL DEFAULT '0',
   `reserve_price` double(17,2) NOT NULL DEFAULT '0.00',
@@ -234,41 +244,22 @@ CREATE TABLE IF NOT EXISTS `ilance_projects` (
   `itemstatus` int(1) NOT NULL DEFAULT '1',
   `storecid` int(10) NOT NULL DEFAULT '0',
   `tags` varchar(100) NOT NULL,
-  `genre` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `project_id` (`project_id`),
-  KEY `cid` (`cid`),
-  KEY `project_title` (`project_title`),
-  KEY `status` (`status`),
-  KEY `project_details` (`project_details`),
-  KEY `project_type` (`project_type`),
-  KEY `project_state` (`project_state`),
-  KEY `charityid` (`charityid`),
-  KEY `countryid` (`countryid`),
-  KEY `zipcode` (`zipcode`),
-  KEY `sku` (`sku`),
-  KEY `isbn10` (`isbn10`),
-  KEY `isbn13` (`isbn13`),
-  KEY `partnumber` (`partnumber`),
-  KEY `modelnumber` (`modelnumber`),
-  KEY `hasimage` (`hasimage`),
-  KEY `hasimageslideshow` (`hasimageslideshow`),
-  KEY `hasdigitalfile` (`hasdigitalfile`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=48 ;
+  `genre` varchar(100) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ilance_projects`
 --
 
 INSERT INTO `ilance_projects` (`id`, `project_id`, `escrow_id`, `cid`, `description`, `ishtml`, `description_videourl`, `date_added`, `date_starts`, `date_end`, `gtc`, `gtc_cancelled`, `user_id`, `visible`, `views`, `project_title`, `bids`, `bidsdeclined`, `bidsretracted`, `bidsshortlisted`, `budgetgroup`, `additional_info`, `status`, `close_date`, `transfertype`, `transfer_to_userid`, `transfer_from_userid`, `transfer_to_email`, `transfer_status`, `transfer_code`, `project_details`, `project_type`, `project_state`, `bid_details`, `filter_rating`, `filter_country`, `filter_state`, `filter_city`, `filter_zip`, `filter_underage`, `filter_businessnumber`, `filter_bidtype`, `filter_budget`, `filter_escrow`, `filter_gateway`, `filter_ccgateway`, `filter_offline`, `filter_publicboard`, `filtered_rating`, `filtered_country`, `filtered_state`, `filtered_city`, `filtered_zip`, `filter_bidlimit`, `filtered_bidlimit`, `filtered_bidtype`, `filtered_bidtypecustom`, `filtered_budgetid`, `filtered_auctiontype`, `classified_phone`, `classified_price`, `urgent`, `buynow`, `buynow_price`, `buynow_qty`, `buynow_qty_lot`, `items_in_lot`, `buynow_purchases`, `reserve`, `reserve_price`, `featured`, `featured_date`, `featured_searchresults`, `highlite`, `bold`, `autorelist`, `autorelist_date`, `startprice`, `retailprice`, `uniquebidcount`, `paymethod`, `paymethodcc`, `paymethodoptions`, `paymethodoptionsemail`, `keywords`, `currentprice`, `insertionfee`, `enhancementfee`, `fvf`, `isfvfpaid`, `isifpaid`, `isenhancementfeepaid`, `ifinvoiceid`, `enhancementfeeinvoiceid`, `fvfinvoiceid`, `returnaccepted`, `returnwithin`, `returngivenas`, `returnshippaidby`, `returnpolicy`, `buyerfeedback`, `sellerfeedback`, `hasimage`, `hasimageslideshow`, `hasdigitalfile`, `haswinner`, `hasbuynowwinner`, `winner_user_id`, `donation`, `charityid`, `donationpercentage`, `donermarkedaspaid`, `donermarkedaspaiddate`, `donationinvoiceid`, `currencyid`, `countryid`, `country`, `state`, `city`, `zipcode`, `sku`, `upc`, `ean`, `isbn10`, `isbn13`, `partnumber`, `modelnumber`, `salestaxstate`, `salestaxrate`, `salestaxentirecountry`, `salestaxshipping`, `countdownresets`, `bulkid`, `updateid`, `storeid`, `itemcondition`, `imageurl`, `imageurl_attachid`, `download_attachid`, `itemstatus`, `storecid`, `tags`, `genre`) VALUES
-(40, 51515282, 0, 3, 'DES', '0', NULL, '2012-10-29 08:55:29', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, 'Song Name', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 15.00, 0, 0, 0, 0, 0, 14.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'Laptop', 'male'),
-(41, 11515348, 0, 3, 'jkl', '0', NULL, '2012-10-29 08:57:01', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, 'kjl', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 15.00, 0, 0, 0, 0, 0, 7.50, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'Laptop', 'Female'),
-(42, 86325138, 0, 3, 'dfgdf', '0', NULL, '2012-12-23 23:59:19', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, 'gdfg', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 12.00, 0, 0, 0, 0, 0, 12.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'dfg', 'male'),
-(43, 36325191, 0, 3, '', '0', NULL, '2012-12-24 00:06:04', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, '', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sad', 'male'),
-(44, 26325585, 0, 3, '', '0', NULL, '2012-12-24 00:11:18', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, 'kjjkj', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sdf', 'male'),
-(45, 26325897, 0, 3, 'sdfsdf', '0', NULL, '2012-12-24 00:11:46', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, '', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sdfdsf', 'male'),
-(46, 56325919, 0, 3, '', '0', NULL, '2012-12-24 00:12:09', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, '', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sdf', 'male'),
-(47, 36325956, 0, 3, 'sdfsdf', '0', NULL, '2012-12-24 00:13:17', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, '', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sdfsdf', 'male');
+(40, 51515282, 0, 1, 'DES', '0', NULL, '2012-10-29 08:55:29', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 9, 1, 0, 'Song Name', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 15.00, 0, 0, 0, 0, 0, 14.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'Laptop', 'male'),
+(41, 11515348, 0, 2, 'jkl', '0', NULL, '2012-10-29 08:57:01', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 9, 1, 0, 'kjl', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 15.00, 0, 0, 0, 0, 0, 7.50, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'Laptop', 'Female'),
+(42, 86325138, 0, 3, 'dfgdf', '0', NULL, '2012-12-23 23:59:19', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 9, 1, 0, 'gdfg', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 12.00, 0, 0, 0, 0, 0, 12.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'dfg', 'male'),
+(43, 36325191, 0, 1, '', '0', NULL, '2012-12-24 00:06:04', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 9, 1, 0, '', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sad', 'male'),
+(44, 26325585, 0, 2, '', '0', NULL, '2012-12-24 00:11:18', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 9, 1, 0, 'kjjkj', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sdf', 'male'),
+(45, 26325897, 0, 3, 'sdfsdf', '0', NULL, '2012-12-24 00:11:46', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 9, 1, 0, '', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sdfdsf', 'male'),
+(46, 56325919, 0, 1, '', '0', NULL, '2012-12-24 00:12:09', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, '', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sdf', 'male'),
+(47, 36325956, 0, 2, 'sdfsdf', '0', NULL, '2012-12-24 00:13:17', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 1, 0, '', 0, 0, 0, 0, '', NULL, 'draft', '0000-00-00 00:00:00', 'userid', 0, 0, '', '', '', 'public', 'reverse', 'service', 'open', '0', '0', '0', '0', '0', '0', '0', '0', '0', 0, 0, 0, 0, '0', '1', '', '', '', '', 0, 10, 'entire', '', 0, 'regular', '', 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, '0000-00-00 00:00:00', 0.00, 0.00, 0, NULL, NULL, NULL, NULL, '', 0.00, 0.00, 0.00, 0.00, 0, 0, 0, 0, 0, 0, 0, '0', 'none', 'none', NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, 0, 0, 0, 1, 0, NULL, NULL, 0, 0, 1, 0, 'sdfsdf', 'male');
 
 -- --------------------------------------------------------
 
@@ -276,8 +267,8 @@ INSERT INTO `ilance_projects` (`id`, `project_id`, `escrow_id`, `cid`, `descript
 -- Table structure for table `ilance_subscription_user`
 --
 
-CREATE TABLE IF NOT EXISTS `ilance_subscription_user` (
-  `id` int(100) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `ilance_subscription_user` (
+  `id` int(100) NOT NULL,
   `subscriptionid` int(10) NOT NULL DEFAULT '1',
   `user_id` int(100) NOT NULL DEFAULT '-1',
   `paymethod` enum('account','bank','visa','amex','mc','disc','paypal','paypal_pro','check','stormpay','cashu','moneybookers') NOT NULL DEFAULT 'account',
@@ -291,15 +282,8 @@ CREATE TABLE IF NOT EXISTS `ilance_subscription_user` (
   `migratelogic` enum('none','waived','unpaid','paid') NOT NULL DEFAULT 'none',
   `recurring` int(1) NOT NULL DEFAULT '0',
   `invoiceid` int(10) NOT NULL DEFAULT '0',
-  `roleid` int(5) NOT NULL DEFAULT '-1',
-  PRIMARY KEY (`id`),
-  KEY `subscriptionid` (`subscriptionid`),
-  KEY `user_id` (`user_id`),
-  KEY `paymethod` (`paymethod`),
-  KEY `active` (`active`),
-  KEY `migratelogic` (`migratelogic`),
-  KEY `invoiceid` (`invoiceid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+  `roleid` int(5) NOT NULL DEFAULT '-1'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ilance_subscription_user`
@@ -320,8 +304,8 @@ INSERT INTO `ilance_subscription_user` (`id`, `subscriptionid`, `user_id`, `paym
 -- Table structure for table `ilance_users`
 --
 
-CREATE TABLE IF NOT EXISTS `ilance_users` (
-  `user_id` int(100) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `ilance_users` (
+  `user_id` int(100) NOT NULL,
   `ipaddress` varchar(25) NOT NULL DEFAULT '',
   `iprestrict` int(1) NOT NULL DEFAULT '0',
   `username` varchar(50) NOT NULL DEFAULT '',
@@ -398,23 +382,8 @@ CREATE TABLE IF NOT EXISTS `ilance_users` (
   `password_lastchanged` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `role` int(10) NOT NULL DEFAULT '0',
   `store` int(10) NOT NULL DEFAULT '0',
-  `store_pay` int(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`),
-  KEY `username` (`username`),
-  KEY `email` (`email`),
-  KEY `first_name` (`first_name`),
-  KEY `last_name` (`last_name`),
-  KEY `zip_code` (`zip_code`),
-  KEY `country` (`country`),
-  KEY `rating` (`rating`),
-  KEY `city` (`city`),
-  KEY `state` (`state`),
-  KEY `status` (`status`),
-  KEY `serviceawards` (`serviceawards`),
-  KEY `score` (`score`),
-  KEY `gender` (`gender`),
-  KEY `freelancing` (`freelancing`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+  `store_pay` int(10) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `ilance_users`
@@ -428,4 +397,123 @@ INSERT INTO `ilance_users` (`user_id`, `ipaddress`, `iprestrict`, `username`, `p
 (5, '127.0.0.1', 0, 'ravish', '3ca821c65e00894d75e22303b6357a9e', '{^JKv', '', '', 'kprasadbe@gmail.comd', '', '', '', '', '', 'Ontario', '', '', 330, '2012-10-22 05:09:09', NULL, 'active', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2012-10-22 05:09:09', '0000-00-00', 'APIDSG', 'IL9322186446382', 0.00, 0.00, 0.00, 0.00, 'main', 1, 1, 1, 1, 1, 'America/Toronto', 0, 0, '', '', '0000-00-00', '0000-00-00', 1, 1, 0, '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0.00, NULL, NULL, '', '', 1, 0, NULL, '0000-00-00 00:00:00', 2, 0, 0),
 (6, '127.0.0.1', 0, 'asasdfs', '1dba9b8f5c237063a754fb323e17b56a', 'f?7DZ', '', '', 'prasan_1327040101_per@gmail.com', '', '', '', '', '', 'Ontario', '', '', 330, '2012-10-22 05:12:55', NULL, 'active', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2012-10-22 05:12:55', '0000-00-00', 'NRNFAJ', 'IL8859963475747', 0.00, 0.00, 0.00, 0.00, 'main', 1, 1, 1, 1, 1, 'America/Toronto', 0, 0, '', '', '0000-00-00', '0000-00-00', 1, 1, 0, '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0.00, NULL, NULL, '', '', 1, 0, NULL, '0000-00-00 00:00:00', 2, 0, 0),
 (7, '127.0.0.1', 0, 'prasadk', 'd44d35dfed03f1299d63aa59e9c3812d', '}*8.;', '', '', 'prasad@keer.ana', '', '', '', '', '', 'Ontario', '', '', 330, '2012-10-22 05:13:44', NULL, 'active', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2012-10-22 05:13:44', '0000-00-00', 'DLPNQE', 'IL6968465832587', 0.00, 0.00, 0.00, 0.00, 'main', 1, 1, 1, 1, 1, 'America/Toronto', 0, 0, '', '', '0000-00-00', '0000-00-00', 1, 1, 0, '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0.00, NULL, NULL, '', '', 1, 0, NULL, '0000-00-00 00:00:00', 2, 0, 0),
-(8, '127.0.0.1', 0, 'prasads', 'ead94c50549fae56d5a5ad4146850104', 'Ny?aP', '', '', 'prasad@keer.anas', '', '', '', '', '', 'Ontario', '', '', 330, '2012-10-23 04:14:33', NULL, 'active', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2012-10-23 04:14:33', '0000-00-00', 'ZSEIOK', 'IL5081502786828', 0.00, 0.00, 0.00, 0.00, 'main', 1, 1, 1, 1, 1, 'America/Toronto', 0, 0, '', '', '0000-00-00', '0000-00-00', 1, 1, 0, '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0.00, NULL, NULL, '', '', 1, 0, NULL, '0000-00-00 00:00:00', 2, 0, 0);
+(8, '127.0.0.1', 0, 'prasads', 'ead94c50549fae56d5a5ad4146850104', 'Ny?aP', '', '', 'prasad@keer.anas', '', '', '', '', '', 'Ontario', '', '', 330, '2012-10-23 04:14:33', NULL, 'active', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2012-10-23 04:14:33', '0000-00-00', 'ZSEIOK', 'IL5081502786828', 0.00, 0.00, 0.00, 0.00, 'main', 1, 1, 1, 1, 1, 'America/Toronto', 0, 0, '', '', '0000-00-00', '0000-00-00', 1, 1, 0, '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0.00, NULL, NULL, '', '', 1, 0, NULL, '0000-00-00 00:00:00', 2, 0, 0),
+(9, '127.0.0.1', 0, 'bhaskar', '098f6bcd4621d373cade4e832627b4f6', 'Ny?aP', '', '', 'bhaskar@keer.anas', '', '', '', '', '', 'Ontario', '', '', 330, '2012-10-23 04:14:33', NULL, 'active', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2012-10-23 04:14:33', '2000-01-01', 'ZSEIOK', 'IL5081502786828', 0.00, 0.00, 0.00, 0.00, 'main', 1, 1, 1, 1, 1, 'America/Toronto', 0, 0, '', '', '2000-01-01', '2000-01-01', 1, 1, 0, '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0.00, NULL, NULL, '', '', 1, 0, NULL, '2000-01-01 00:00:00', 2, 0, 0);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `ilance_buynow_orders`
+--
+ALTER TABLE `ilance_buynow_orders`
+  ADD PRIMARY KEY (`orderid`),
+  ADD KEY `parentid` (`parentid`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `buyer_id` (`buyer_id`),
+  ADD KEY `owner_id` (`owner_id`),
+  ADD KEY `attachid` (`attachid`),
+  ADD KEY `invoiceid` (`invoiceid`),
+  ADD KEY `status` (`status`);
+
+--
+-- Indexes for table `ilance_categories`
+--
+ALTER TABLE `ilance_categories`
+  ADD PRIMARY KEY (`cid`);
+
+--
+-- Indexes for table `ilance_projects`
+--
+ALTER TABLE `ilance_projects`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `cid` (`cid`),
+  ADD KEY `project_title` (`project_title`),
+  ADD KEY `status` (`status`),
+  ADD KEY `project_details` (`project_details`),
+  ADD KEY `project_type` (`project_type`),
+  ADD KEY `project_state` (`project_state`),
+  ADD KEY `charityid` (`charityid`),
+  ADD KEY `countryid` (`countryid`),
+  ADD KEY `zipcode` (`zipcode`),
+  ADD KEY `sku` (`sku`),
+  ADD KEY `isbn10` (`isbn10`),
+  ADD KEY `isbn13` (`isbn13`),
+  ADD KEY `partnumber` (`partnumber`),
+  ADD KEY `modelnumber` (`modelnumber`),
+  ADD KEY `hasimage` (`hasimage`),
+  ADD KEY `hasimageslideshow` (`hasimageslideshow`),
+  ADD KEY `hasdigitalfile` (`hasdigitalfile`);
+
+--
+-- Indexes for table `ilance_subscription_user`
+--
+ALTER TABLE `ilance_subscription_user`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `subscriptionid` (`subscriptionid`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `paymethod` (`paymethod`),
+  ADD KEY `active` (`active`),
+  ADD KEY `migratelogic` (`migratelogic`),
+  ADD KEY `invoiceid` (`invoiceid`);
+
+--
+-- Indexes for table `ilance_users`
+--
+ALTER TABLE `ilance_users`
+  ADD PRIMARY KEY (`user_id`),
+  ADD KEY `username` (`username`),
+  ADD KEY `email` (`email`),
+  ADD KEY `first_name` (`first_name`),
+  ADD KEY `last_name` (`last_name`),
+  ADD KEY `zip_code` (`zip_code`),
+  ADD KEY `country` (`country`),
+  ADD KEY `rating` (`rating`),
+  ADD KEY `city` (`city`),
+  ADD KEY `state` (`state`),
+  ADD KEY `status` (`status`),
+  ADD KEY `serviceawards` (`serviceawards`),
+  ADD KEY `score` (`score`),
+  ADD KEY `gender` (`gender`),
+  ADD KEY `freelancing` (`freelancing`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `ilance_buynow_orders`
+--
+ALTER TABLE `ilance_buynow_orders`
+  MODIFY `orderid` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `ilance_categories`
+--
+ALTER TABLE `ilance_categories`
+  MODIFY `cid` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `ilance_projects`
+--
+ALTER TABLE `ilance_projects`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- AUTO_INCREMENT for table `ilance_subscription_user`
+--
+ALTER TABLE `ilance_subscription_user`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `ilance_users`
+--
+ALTER TABLE `ilance_users`
+  MODIFY `user_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
