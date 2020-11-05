@@ -22,3 +22,27 @@ router.post('/login', (req, res, next) => {
       }
   });
 });
+
+router.get('/user', (req, res, next) => {
+    try {
+      const token = req.headers.authorization || '';
+      const tokenDecoded = decode(token);
+  
+      database.query('SELECT * FROM ilance_users WHERE user_id = ? LIMIT 1',
+        [tokenDecoded.userId],
+        (error, results) => {
+          if(!error && results && results.length) {
+            const user = results[0];
+            
+            res.json({user});
+          } else {
+            res.status(401).end();
+          }
+      });
+    } catch(error) {
+      res.status(401).end();
+    }
+  });
+  
+  module.exports = router;
+  
